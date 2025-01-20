@@ -1,5 +1,6 @@
 import { SecurityThreat } from "../models/SecurityThreat.js";
 import { User } from "../models/User.js";
+import {SecurityEvent} from "~/models/SecurityEvent.js";
 
 export const logedInFunctions = () => {
     const getUser = async () => {
@@ -102,13 +103,13 @@ export const logedInFunctions = () => {
             throw error;
         }
     };
-    const getEvents = async () => {
+    const getEvents = async (threatId) => {
       try {
-          const response = await fetch("http://localhost:5079/api/events/allEvents", {
+          const response = await fetch(`http://localhost:5079/api/threats/${threatId}/events/allEvents`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("AccessToken")}`, // Pass the token
+              Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
             },
           });
     
@@ -117,20 +118,19 @@ export const logedInFunctions = () => {
           }
     
           const data = await response.json();
-          const threat = new SecurityThreat(data);
-          // Transform data into User instances if needed
+          const event = new SecurityEvent(data);
           console.log(data);
-          console.log(threat);
-          return  data.map(item => new threat(item));
+          console.log(event);
+          return  data.map(item => new event(item));
         } catch (error) {
           console.error("Error during getting user data:", error);
           throw error;
         }
     }
 
-    const postEvent = async (threatDetails) => {
+    const postEvent = async (threatDetails, threatId) => {
       try {
-          const response = await fetch("http://localhost:5079/api/events/createEvent", {
+          const response = await fetch(`http://localhost:5079/api/threats/${threatId}/events/createEvent`, {
               method: "POST",
               headers: {
                   "Content-Type": "application/json",

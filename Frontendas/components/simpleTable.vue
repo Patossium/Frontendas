@@ -134,8 +134,3 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-body {
-  font-family: "Plus Jakarta Sans", sans-serif;
-}
-</style>
