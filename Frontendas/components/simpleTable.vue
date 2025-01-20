@@ -83,6 +83,7 @@ const checkLoginStatus = () => {
   }
 };
 
+
 const getThreats = async () => {
   try {
     const response = await fetch("http://localhost:5079/api/threats/allThreats", {

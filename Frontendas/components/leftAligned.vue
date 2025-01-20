@@ -1,106 +1,78 @@
 <template>
   <div>
-    <div class="px-4 sm:px-0">
+    <div v-if="threat" class="px-4 sm:px-0">
       <h3 class="text-base font-semibold text-gray-900">Threat Information</h3>
       <p class="mt-1 max-w-2xl text-sm text-gray-500">Details of the threat model.</p>
     </div>
-    <div class="mt-6 border-t border-gray-100">
+    <div v-if="threat" class="mt-6 border-t border-gray-100">
       <dl class="divide-y divide-gray-100">
         <!-- Title -->
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium text-gray-900">Title</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Title }}</dd>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.name }}</dd>
         </div>
 
         <!-- Description -->
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium text-gray-900">Description</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Description }}</dd>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.description }}</dd>
         </div>
 
-        <!-- Severity -->
+        <!-- Date Added -->
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Severity</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Severity }}</dd>
+          <dt class="text-sm font-medium text-gray-900">Date Added</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ new Date(threat.dateAdded).toLocaleString() }}</dd>
         </div>
 
-        <!-- Status -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Status</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Status }}</dd>
+        <!-- Related Event -->
+        <div v-if="threat.relatedEvent" class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">Related Event</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.relatedEvent }}</dd>
         </div>
 
-        <!-- Category -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Category</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Category }}</dd>
+        <!-- User -->
+        <div v-if="threat.user" class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">User</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.user.userName }}</dd>
         </div>
 
-        <!-- Source -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Source</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Source }}</dd>
-        </div>
-
-        <!-- Visibility -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Visibility</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Visibility }}</dd>
-        </div>
-
-        <!-- Impact -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Impact</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Impact }}</dd>
-        </div>
-
-        <!-- Response -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt class="text-sm font-medium text-gray-900">Response</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.Response }}</dd>
-        </div>
-
-        <!-- Attachments (optional) -->
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0" v-if="threat.Attachments && threat.Attachments.length > 0">
-          <dt class="text-sm font-medium text-gray-900">Attachments</dt>
-          <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-            <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">
-              <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm">
-                <div class="flex w-0 flex-1 items-center">
-                  <PaperClipIcon class="size-5 shrink-0 text-gray-400" aria-hidden="true" />
-                  <div class="ml-4 flex min-w-0 flex-1 gap-2">
-                    <span class="truncate font-medium">{{ threat.Attachments[0].name }}</span>
-                    <span class="shrink-0 text-gray-400">{{ threat.Attachments[0].size }}</span>
-                  </div>
-                </div>
-                <div class="ml-4 shrink-0">
-                  <a :href="threat.Attachments[0].url" class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                </div>
-              </li>
-            </ul>
+        <!-- Upvoted/Downvoted -->
+        <div v-if="threat.upvoted || threat.downvoted" class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">Votes</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+            Upvoted: {{ threat.upvoted }} | Downvoted: {{ threat.downvoted }}
           </dd>
         </div>
       </dl>
+    </div>
+    <div v-else class="px-4 sm:px-0">
+      <p>Loading...</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { PaperClipIcon } from '@heroicons/vue/20/solid'
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { logedInFunctions } from "~/composables/logedInFunctions";
 
-// Assuming threat data is passed in as a prop or fetched from API
-const threat = {
-  Title: 'Malware Attack',
-  Description: 'A critical malware attack was detected in the system...',
-  Severity: 'High',
-  Status: 'Under Investigation',
-  Category: 'Malware',
-  Source: 'Internal',
-  Visibility: 'Public',
-  Impact: 'Financial',
-  Response: 'Investigating and mitigating',
-  Attachments: [
-    { name: 'threat_report.pdf', size: '1.5MB', url: '/files/threat_report.pdf' }
-  ]
+const { getThreat } = logedInFunctions();
+
+const threat = ref(null);
+
+const route = useRoute();
+const threatId = route.params.id;
+
+const getThreatDetails = async () => {
+  try {
+    const response = await getThreat(threatId);
+    threat.value = response;
+  } catch (error) {
+    console.error('Error fetching threat details:', error);
+  }
 };
+
+onMounted(() => {
+  getThreatDetails();
+});
 </script>

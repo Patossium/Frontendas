@@ -54,7 +54,7 @@ export const logedInFunctions = () => {
 
     const getThreat = async (threatId) => {
         try {
-            const response = await fetch("http://localhost:5079/api/threats/${threatId}", {
+            const response = await fetch(`http://localhost:5079/api/threats/${threatId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -67,10 +67,7 @@ export const logedInFunctions = () => {
             }
 
             const data = await response.json();
-            const threat = new SecurityThreat(data);
-            console.log(data);
-            console.log(threat);
-            return  data.map(item => new threat(item));
+            return data;
         } catch (error) {
             console.error("Error during getting user data:", error);
             throw error;
