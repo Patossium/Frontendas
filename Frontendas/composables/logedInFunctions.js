@@ -80,7 +80,60 @@ export const logedInFunctions = () => {
             throw error;
         }
     };
+    const getEvents = async () => {
+      try {
+          const response = await fetch("http://localhost:5079/api/events/allEvents", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("AccessToken")}`, // Pass the token
+            },
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          const threat = new SecurityThreat(data);
+          // Transform data into User instances if needed
+          console.log(data);
+          console.log(threat);
+          return  data.map(item => new threat(item));
+        } catch (error) {
+          console.error("Error during getting user data:", error);
+          throw error;
+        }
+    }
+    const postEvent = async (threatDetails) => {
+      try {
+          const response = await fetch("http://localhost:5079/api/events/createEvent", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+              },
+              body: JSON.stringify(threatDetails),
+          })
+  
+          if (response.ok) {
+              return { status: response.status, message: 'Threat successfully created' };
+          } else {
+              // Try to parse the response as JSON, if possible
+              let errorDetails;
+              try {
+                  errorDetails = await response.json();
+              } catch (jsonError) {
+                  errorDetails = { message: 'Unknown error occurred' }; // Fallback if the response is not JSON
+              }
+              return { status: response.status, message: `Could not create a threat: ${errorDetails.message || 'Unknown error'}` };
+          }
+      } catch (error) {
+          console.error('Error during creating a threat', error);
+          throw error;
+      }
+  };
       // Return an object containing the function
-      return { getUser, getThreats, postThreat };
+      return { getUser, getThreats, postThreat, getEvents, postEvent };
 
 }
