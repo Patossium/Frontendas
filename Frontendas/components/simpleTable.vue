@@ -25,24 +25,30 @@
               <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                  <th scope="col" class="py-3.5 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-4">
+                    Threat ID
+                  </th>
+                  <th scope="col" class="py-3.5 pl-1 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                     Title
                   </th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     User
                   </th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="threat in threats" :key="threat.Id">
+                <tr v-for="threat in threats" :key="threat.Id" class="cursor-pointer hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300">
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                    {{ threat.Id }}
+                  </td>
                   <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 cursor-pointer"
+                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                       @click="redirectToThreat(threat.Id)"
                   >
-                    {{ threat.Title }}
+                    {{ threat.Name }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ threat.User }}
+                    {{ threat.User.userName }}
                   </td>
                 </tr>
                 </tbody>
@@ -93,6 +99,7 @@ const getThreats = async () => {
 
     const data = await response.json();
     threats.value = data.map((item) => new SecurityThreat(item));
+    console.log('Mapped threats:', threats.value);
   } catch (error) {
     console.error("Error fetching threats:", error);
   }
@@ -110,15 +117,11 @@ const redirectToThreat = (threatId) => {
   window.location.href = `/threats/${threatId}`;
 };
 
-// Manual login method (hardcoded user)
 const manualLogin = () => {
-  // Set the user as logged in manually
   isLoggedIn.value = true;
 
-  // Optionally, you can store user data or mock a login token
   localStorage.setItem("AccessToken", "manual-login-token");
 
-  // Fetch the threats after login
   getThreats();
 };
 
