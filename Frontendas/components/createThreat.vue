@@ -47,12 +47,12 @@
     
       const threatDetails = {
         Name: Name.value,
-        Description: Description.value
+        Description: Description.value,
       }
       try {
     const response = await logedInFunctions().postThreat(threatDetails);
     if (response.status === 201) {
-      console.log("Registration successful");
+      console.log("Threat post succesful");
       window.location.href = 'http://localhost:3000/threatList';
     }
   } catch (err) {

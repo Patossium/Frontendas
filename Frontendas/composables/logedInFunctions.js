@@ -1,5 +1,5 @@
-import { SecurityThreat } from "~/models/SecurityThreat";
-import { User } from "~/models/User";
+import { SecurityThreat } from "../models/SecurityThreat.js";
+import { User } from "../models/User.js";
 
 export const logedInFunctions = () => {
     const getUser = async () => {

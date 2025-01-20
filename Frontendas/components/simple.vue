@@ -1,26 +1,4 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
-  <!--
-    This example requires updating your template:
-
-    ```
-    <html class="h-full bg-gray-50">
-    <body class="h-full">
-    ```
-  -->
   <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
@@ -45,6 +23,9 @@
             </div>
           </div>
 
+          <div v-if="inCorrectCredentials">
+            <div class="text-red-700 text-xs">Incorrect credentials</div>
+          </div>
 
           <div>
             <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Sign in</button>
@@ -64,6 +45,7 @@ import { useAuth } from "../composables/useAuth.js";
 
 const Username = ref('');
 const Password = ref('');
+const inCorrectCredentials = ref(false);
 
 const handleLogin = async () => {
   const payload = {
@@ -72,13 +54,15 @@ const handleLogin = async () => {
   };
 
   try {
-    const response = await useAuth().login(payload); // Replace with login function
-    if (response.status === 200) { // Assuming 200 is the success status for login
+    const response = await useAuth().login(payload);
+    if (response.status === 200) {
       console.log("Login successful");
-      window.location.href = "/main"; // Redirect to the dashboard or desired route
+      window.location.href = "/main";
+      inCorrectCredentials.value = false;
     }
   } catch (err) {
     console.error("Login failed:", err);
+    inCorrectCredentials.value = true;
   }
 };
 </script>
