@@ -54,19 +54,25 @@ export const logedInFunctions = () => {
       }
       const postThreat = async (threatDetails) => {
         try {
-            const response = await fetch("http://localhost:5079/api/threats", {
+            const response = await fetch("http://localhost:5079/api/threats/createThreat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`, // Include the authorization token
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
                 },
-                body: JSON.stringify(threatDetails), // Pass the threat details as the request body
+                body: JSON.stringify(threatDetails),
             });
     
             if (response.ok) {
                 return { status: response.status, message: 'Threat successfully created' };
             } else {
-                const errorDetails = await response.json();
+                // Try to parse the response as JSON, if possible
+                let errorDetails;
+                try {
+                    errorDetails = await response.json();
+                } catch (jsonError) {
+                    errorDetails = { message: 'Unknown error occurred' }; // Fallback if the response is not JSON
+                }
                 return { status: response.status, message: `Could not create a threat: ${errorDetails.message || 'Unknown error'}` };
             }
         } catch (error) {
@@ -75,6 +81,6 @@ export const logedInFunctions = () => {
         }
     };
       // Return an object containing the function
-      return { getUser };
-      return { getThreats };
+      return { getUser, getThreats, postThreat };
+
 }

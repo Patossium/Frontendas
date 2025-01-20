@@ -1,82 +1,80 @@
 <template>
   <div class="px-4 sm:px-6 lg:px-8">
     <!-- Check if user is logged in -->
-    <div v-if="isLoggedIn" class="sm:flex sm:items-center">
-      <main>
-        <div class="sm:flex-auto">
-          <h1 class="text-xl font-semibold text-gray-900">Cybersecurity Threats</h1>
-          <p class="mt-2 text-sm text-gray-700">
-            A list of all the cybersecurity threats that have been recorded in the system
-          </p>
-        </div>
+    <div v-if="isLoggedIn">
+      <!-- Centered header section -->
+      <main class="text-center my-20">
+        <h1 class="text-2xl font-semibold text-gray-900">Cybersecurity Threats</h1>
+        <p class="mt-2 text-sm text-gray-700">
+          A list of all the cybersecurity threats that have been recorded in the system
+        </p>
       </main>
 
-      <div class="mt-4">
+      <!-- Button and table section -->
+      <div class="flex flex-row items-center justify-center">
         <button
-          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          @click="redirectToCreateThreat"
+            class="py-3 px-2 mr-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            @click="redirectToCreateThreat"
         >
           Create a New Threat
         </button>
-      </div>
 
-      <div class="mt-8 flex flex-col">
-        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="w-7/12 -my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <table class="min-w-full divide-y divide-gray-300">
                 <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                      Title
-                    </th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      First Occurred
-                    </th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Last Occurred
-                    </th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Severity
-                    </th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Status
-                    </th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Impact
-                    </th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      User
-                    </th>
-                  </tr>
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    Title
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    First Occurred
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Last Occurred
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Severity
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Status
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Impact
+                  </th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    User
+                  </th>
+                </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="threat in threats" :key="threat.Id">
-                    <td
+                <tr v-for="threat in threats" :key="threat.Id">
+                  <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 cursor-pointer"
                       @click="redirectToThreat(threat.Id)"
-                    >
-                      {{ threat.Title }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.FirstOccured }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.LastOccured }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.Severity }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.Status }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.Impact }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.User }}
-                    </td>
-                  </tr>
+                  >
+                    {{ threat.Title }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ threat.FirstOccured }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ threat.LastOccured }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ threat.Severity }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ threat.Status }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ threat.Impact }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ threat.User }}
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -88,8 +86,8 @@
     <!-- Login prompt if not logged in -->
     <div v-else class="text-center py-32">
       <h1 class="text-4xl font-bold text-gray-900">Please log in to view the content.</h1>
-      <button class="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-lg" @click="redirectToLogin">
-        Log in
+      <button class="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-lg" @click="manualLogin">
+        Log in manually
       </button>
     </div>
   </div>
@@ -135,11 +133,23 @@ const redirectToLogin = () => {
 };
 
 const redirectToCreateThreat = () => {
-  window.location.href = "/create-threat";
+  window.location.href = "/createThreat";
 };
 
 const redirectToThreat = (threatId) => {
-  window.location.href = `/threat/${threatId}`;
+  window.location.href = `/threats/${threatId}`;
+};
+
+// Manual login method (hardcoded user)
+const manualLogin = () => {
+  // Set the user as logged in manually
+  isLoggedIn.value = true;
+
+  // Optionally, you can store user data or mock a login token
+  localStorage.setItem("AccessToken", "manual-login-token");
+
+  // Fetch the threats after login
+  getThreats();
 };
 
 onMounted(() => {

@@ -48,8 +48,6 @@ export const useAuth = () => {
     };
 
     const logout = async () => {
-        const baseUrl = environmentAuth.baseUrl;
-        const urlLogout = `${baseUrl}/${apiAuthPaths.logout}`;
 
         try {
             const response = await fetch(urlLogout, {
@@ -75,7 +73,9 @@ export const useAuth = () => {
         if (refreshTask.value) {
             clearTimeout(refreshTask.value);
             refreshTask.value = null;
+            window.location.href = '/';
         }
+
     };
 
     return {

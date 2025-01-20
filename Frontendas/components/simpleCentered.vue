@@ -17,6 +17,7 @@
           <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 text-gray-900">
             {{ item.name }}
           </a>
+          <a href="#" @click="clearTokens" class="text-blue-600 hover:text-blue-500">Log out</a>
         </div>
         <div v-if="!isLoggedIn" class="lg:hidden">
           <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700" @click="mobileMenuOpen = true">
@@ -46,6 +47,7 @@
                   {{ item.name }}
                 </a>
               </div>
+              
               <div v-if="!isLoggedIn" class="py-6">
                 <a href="#" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10">
                   Log in
@@ -63,9 +65,6 @@
           <div class="hidden sm:mb-8 sm:flex sm:justify-center"></div>
           <div class="text-center">
             <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Cybersecurity threat information sharing system</h1>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.
-            </p>
           </div>
         </div>
         <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
@@ -94,6 +93,20 @@
 import { ref } from 'vue'
 import { Dialog, DialogPanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+
+
+// Define the clearTokens function
+const refreshTask = ref(null);
+
+const clearTokens = () => {
+  localStorage.removeItem('AccessToken');
+  if (refreshTask.value) {
+    clearTimeout(refreshTask.value);
+    refreshTask.value = null;
+    window.location.href = 'http://localhost:3000/';
+  }
+  window.location.href = 'http://localhost:3000/'
+};
 
 const navigation = [
   { name: 'Profile', href: 'http://localhost:3000/profile' },

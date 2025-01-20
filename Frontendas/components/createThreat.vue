@@ -7,6 +7,7 @@
       <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form @submit.prevent="handleCreateThreat" class="space-y-6">
+            <!-- Title -->
             <div>
               <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
               <div class="mt-1">
@@ -14,6 +15,7 @@
               </div>
             </div>
   
+            <!-- Description -->
             <div>
               <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
               <div class="mt-1">
@@ -21,27 +23,17 @@
               </div>
             </div>
   
-            <div>
-              <label for="firstOccured" class="block text-sm font-medium text-gray-700">First Occurred</label>
-              <div class="mt-1">
-                <input id="firstOccured" v-model="FirstOccured" name="firstOccured" type="date" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-              </div>
-            </div>
-  
-            <div>
-              <label for="lastOccured" class="block text-sm font-medium text-gray-700">Last Occurred</label>
-              <div class="mt-1">
-                <input id="lastOccured" v-model="LastOccured" name="lastOccured" type="date" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
-              </div>
-            </div>
-  
+            <!-- Date fields -->
+        
+            <!-- Severity -->
             <div>
               <label for="severity" class="block text-sm font-medium text-gray-700">Severity</label>
               <div class="mt-1">
-                <input id="severity" v-model="Severity" name="severity" type="text" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                <input id="severity" v-model="Severity" name="severity" type="number" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
               </div>
             </div>
   
+            <!-- Status -->
             <div>
               <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
               <div class="mt-1">
@@ -53,6 +45,7 @@
               </div>
             </div>
   
+            <!-- Category -->
             <div>
               <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
               <div class="mt-1">
@@ -81,6 +74,7 @@
               </div>
             </div>
   
+            <!-- Visibility -->
             <div>
               <label for="visibility" class="block text-sm font-medium text-gray-700">Visibility</label>
               <div class="mt-1">
@@ -91,6 +85,7 @@
               </div>
             </div>
   
+            <!-- Impact -->
             <div>
               <label for="impact" class="block text-sm font-medium text-gray-700">Impact</label>
               <div class="mt-1">
@@ -101,14 +96,24 @@
                 </select>
               </div>
             </div>
-  
+
             <div>
-              <label for="user" class="block text-sm font-medium text-gray-700">User</label>
+              <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
               <div class="mt-1">
-                <input id="user" v-model="User" name="user" type="text" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+                <input id="title" v-model="Source" name="title" type="text" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+              </div>
+            </div>
+
+            <div>
+              <label for="response" class="block text-sm font-medium text-gray-700">Response</label>
+              <div class="mt-1">
+                <input id="title" v-model="Response" name="title" type="text" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
               </div>
             </div>
   
+            <!-- User (manual selection) -->
+  
+            <!-- Submit Button -->
             <div>
               <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Create Threat</button>
             </div>
@@ -120,59 +125,44 @@
   
   <script setup>
   import { ref } from "vue";
-  import jwt_decode from "jwt-decode";
+  import { logedInFunctions } from "../composables/logedInFunctions.js";
   
+  // Define the form fields
   const Title = ref("");
   const Description = ref("");
-  const FirstOccured = ref("");
-  const LastOccured = ref("");
   const Severity = ref("");
   const Status = ref("");
   const Category = ref("");
   const Visibility = ref("");
   const Impact = ref("");
+  const Source = ref("");
+  const Response = ref("");
+  //const User = ref("");  // The selected user will be stored here
   
   const handleCreateThreat = async () => {
-    try {
-      // Decode the JWT to get user details
-      const token = localStorage.getItem("AccessToken");
-      if (!token) {
-        throw new Error("User is not logged in.");
-      }
-  
-      const decodedToken = jwt_decode(token);
-      const userId = decodedToken.userId; // Adjust key based on the token structure
-  
+    
       const threatDetails = {
         Title: Title.value,
         Description: Description.value,
-        FirstOccured: FirstOccured.value,
-        LastOccured: LastOccured.value,
         Severity: Severity.value,
         Status: Status.value,
         Category: Category.value,
+        Source: Source.value,
         Visibility: Visibility.value,
         Impact: Impact.value,
-        User: userId, // Automatically set from the token
-      };
-  
-      const response = await fetch("http://localhost:5079/api/threats/createThreat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(threatDetails),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        Response: Response.value
       }
-  
-      alert("Threat successfully created!");
-    } catch (error) {
-      console.error("Error creating threat:", error);
-      alert("Failed to create the threat.");
+      try {
+    const response = await logedInFunctions().postThreat(threatDetails);
+    if (response.status === 201) {
+      console.log("Registration successful");
+      window.location.href = 'http://localhost:3000/threatList';
     }
-  };
+  } catch (err) {
+    console.error("API call failed:", err);
+  }
+      
+  }
   </script>
+  
+  
