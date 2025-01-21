@@ -86,6 +86,9 @@
                   <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Impact
                   </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    User
+                  </th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -110,6 +113,9 @@
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ event.Impact }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.User.userName }}
                   </td>
                 </tr>
                 </tbody>
