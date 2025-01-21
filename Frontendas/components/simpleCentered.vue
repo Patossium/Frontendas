@@ -13,6 +13,10 @@
     </div>
     <div class="px-6 pt-6 lg:px-8">
       <nav class="flex items-center justify-center" aria-label="Global">
+        <a href="http://localhost:3000/leaderboard" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mr-8">
+          Leaderboard
+        </a>
+
         <div class="hidden lg:flex lg:gap-x-12">
           <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 text-gray-900">
             {{ item.name }}

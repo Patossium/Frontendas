@@ -156,8 +156,32 @@ export const logedInFunctions = () => {
           console.error('Error during creating a threat', error);
           throw error;
       }
+
   };
+    const getLeaderboard = async () => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/users/leaderboard`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const users = data.map(item => new User(item));
+            console.log(users);
+            return users;
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    };
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard };
 
 }
