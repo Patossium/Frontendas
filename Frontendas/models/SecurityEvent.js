@@ -9,7 +9,7 @@ export class SecurityEvent {
         this.Source = data.source;
         this.Impact = data.impact;
         this.Response = data.response;
-        this.User = data.User;
+        this.User = data.user;
         this.SecurityThreat = data.securityThreat;
         this.Downvoted = data.downvoted;
         this.Upvoted = data.upvoted;

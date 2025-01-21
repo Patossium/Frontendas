@@ -159,10 +159,10 @@ const getThreatDetails = async () => {
 const getEventDetails = async () => {
   try {
     const responseEvents = await getEvents(threatId);
-    console.log('Raw response from getEvents:', responseEvents); // Debug log
-
+    console.log('API Response:', responseEvents);
     if (Array.isArray(responseEvents)) {
       events.value = responseEvents;
+      console.log(events);
     } else if (responseEvents) {
       // If response is not an array but exists, wrap it in an array
       events.value = [responseEvents];

@@ -120,7 +120,6 @@ export const logedInFunctions = () => {
           const data = await response.json();
           const events = data.map(item => new SecurityEvent(item));
           console.log(data);
-          console.log(events);
           return  events
         } catch (error) {
           console.error("Error during getting user data:", error);
