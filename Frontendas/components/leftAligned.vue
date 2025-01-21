@@ -40,80 +40,89 @@
         </div>
       </dl>
     </div>
-    <div class="px-4 sm:px-6 lg:px-8">
-      <!-- Check if user is logged in -->
-      <div v-if="isLoggedIn">
-        <!-- Centered header section -->
-        <main class="text-center my-20">
-          <h1 class="text-2xl font-semibold text-gray-900">Cybersecurity Threats</h1>
-          <p class="mt-2 text-sm text-gray-700">
-            A list of all the cybersecurity threats that have been recorded in the system
-          </p>
-        </main>
 
-        <!-- Button and table section -->
-        <div class="flex flex-row items-center justify-center">
-          <button
-              class="py-3 px-2 mr-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              @click="redirectToCreateThreat"
-          >
-            Create a New Threat
-          </button>
+    <div class="px-2 sm:px-3 lg:px-3">
+      <!-- Centered header section -->
+      <main class="my-8">
+        <h1 class="text-base font-semibold text-gray-900">Cybersecurity Events</h1>
+        <p class="mt-2 text-sm text-gray-700">
+          A list of all the cybersecurity events that have been recorded in the system
+        </p>
+      </main>
 
-          <div class="w-7/12 -my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-300">
-                  <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="py-3.5 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-4">
-                      Threat ID
-                    </th>
-                    <th scope="col" class="py-3.5 pl-1 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                      Title
-                    </th>
-                    <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      User
-                    </th>
-                  </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-200 bg-white">
-                  <tr v-for="threat in threats" :key="threat.Id" class="cursor-pointer hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300">
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      {{ threat.Id }}
-                    </td>
-                    <td
-                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                        @click="redirectToThreat(threat.Id)"
-                    >
-                      {{ threat.Name }}
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {{ threat.User.userName }}
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
+      <!-- Button and table section -->
+      <div class="flex flex-row items-start justify-center">
+        <button
+            class="py-1.5 px-4 mr-5 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            @click="redirectToCreateEvent"
+        >
+          Create a New Event
+        </button>
+
+        <div class="w-screen">
+          <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-4">
+                    Event ID
+                  </th>
+                  <th scope="col" class="py-3.5 pl-1 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    Title
+                  </th>
+                  <th scope="col" class="py-3.5 pl-1 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    Description
+                  </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Severity
+                  </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Category
+                  </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Source
+                  </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Impact
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                <tr v-for="event in events" :key="event.Id" class="cursor-pointer hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300">
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                    {{ event.Id }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.Title }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.Description }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.Severity }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.Category }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.Source }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ event.Impact }}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Login prompt if not logged in -->
-      <div v-else class="text-center py-32">
-        <h1 class="text-4xl font-bold text-gray-900">Please log in to view the content.</h1>
-        <button class="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-lg" @click="manualLogin">
-          Log in manually
-        </button>
-      </div>
     </div>
-
-<!--    <div v-else class="px-4 sm:px-0">-->
-<!--      <p>Loading...</p>-->
-<!--    </div>-->
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -123,10 +132,14 @@ import { logedInFunctions } from "~/composables/logedInFunctions";
 const { getThreat, getEvents } = logedInFunctions();
 
 const threat = ref(null);
-const event = ref(null);
+const events = ref([]);
 
 const route = useRoute();
 const threatId = route.params.id;
+
+if (typeof window !== 'undefined') {
+  localStorage.setItem("threatId", threatId);
+}
 
 const getThreatDetails = async () => {
   try {
@@ -139,12 +152,28 @@ const getThreatDetails = async () => {
 
 const getEventDetails = async () => {
   try {
-    const responseEvent = await getEvents(threatId);
-    event.value = responseEvent;
+    const responseEvents = await getEvents(threatId);
+    console.log('Raw response from getEvents:', responseEvents); // Debug log
+
+    if (Array.isArray(responseEvents)) {
+      events.value = responseEvents;
+    } else if (responseEvents) {
+      // If response is not an array but exists, wrap it in an array
+      events.value = [responseEvents];
+    } else {
+      events.value = [];
+    }
+
+    console.log('Processed events:', events.value); // Debug log
   } catch (error) {
-    console.error('Error fetching threat details:', error);
+    console.error('Error fetching events:', error);
+    events.value = [];
   }
 };
+
+const redirectToCreateEvent = () => {
+  window.location.href = `http://localhost:3000/createEvent`;
+}
 
 onMounted(() => {
   getThreatDetails();

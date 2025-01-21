@@ -118,18 +118,20 @@ export const logedInFunctions = () => {
           }
     
           const data = await response.json();
-          const event = new SecurityEvent(data);
+          const events = data.map(item => new SecurityEvent(item));
           console.log(data);
-          console.log(event);
-          return  data.map(item => new event(item));
+          console.log(events);
+          return  events
         } catch (error) {
           console.error("Error during getting user data:", error);
           throw error;
         }
     }
 
-    const postEvent = async (threatDetails, threatId) => {
+    const postEvent = async (threatDetails) => {
       try {
+          var threatId = parseInt(localStorage.getItem("threatId"), 10);
+
           const response = await fetch(`http://localhost:5079/api/threats/${threatId}/events/createEvent`, {
               method: "POST",
               headers: {
@@ -140,7 +142,7 @@ export const logedInFunctions = () => {
           })
   
           if (response.ok) {
-              return { status: response.status, message: 'Threat successfully created' };
+              return { status: response.status, message: 'Event successfully created' };
           } else {
               // Try to parse the response as JSON, if possible
               let errorDetails;
