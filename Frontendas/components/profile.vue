@@ -37,7 +37,28 @@
                     <p>{{ firstUserPoints }}</p>
                   </div>
                 </div>
-  
+
+                <div class="mb-6">
+                  <h3 class="text-lg font-semibold">Badges:</h3>
+                  <div
+                      class="flex flex-wrap justify-center gap-4"
+                  >
+                    <div
+                        v-for="(badge, index) in badges"
+                        :key="index"
+                        class="flex flex-col items-center text-center p-4 mb-4"
+                    >
+                      <img
+                          class="w-16 h-16"
+                          :src="badge.Image"
+                          :alt="badge.Title"
+                      />
+                      <h4 class="mt-2 font-bold text-indigo-700">{{ badge.Title }}</h4>
+                      <p class="text-sm text-gray-600">{{ badge.Description }}</p>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="flex justify-center">
                   <button
                     type="button"
@@ -63,40 +84,39 @@
   <script>
   import { ref } from "vue";
   import { logedInFunctions } from "../composables/logedInFunctions";
-  
-  
+
+
   export default {
     data() {
       return {
-        profilePicture:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+        profilePicture: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
         isLoggedIn: false,
+        firstId: "",
         firstUserName: "",
         firstUserSurname: "",
         firstUserPoints: "",
         firstUserEmail: "",
-        firstUserUserName: ""
+        firstUserUserName: "",
+        badges: [], // Array to store all badge data
       };
     },
     methods: {
-    async fetchUserData() {
-    const { getUser } = logedInFunctions();
-    const fetchedUser = await getUser();
+      async fetchUserData() {
+        const { getUser, getBadges } = logedInFunctions();
+        const fetchedUser = await getUser();
 
-    // Assign the values directly
-    this.firstUserName = fetchedUser.Name; // Adjust based on API key
-    this.firstUserSurname = fetchedUser.Surname;
-    this.firstUserEmail = fetchedUser.Email;
-    this.firstUserPoints = fetchedUser.Points;
-    this.firstUserUserName = fetchedUser.Username;
+        // Assign user data
+        this.firstId = fetchedUser.Id;
+        this.firstUserName = fetchedUser.Name;
+        this.firstUserSurname = fetchedUser.Surname;
+        this.firstUserEmail = fetchedUser.Email;
+        this.firstUserPoints = fetchedUser.Points;
+        this.firstUserUserName = fetchedUser.Username;
 
-    console.log("Fetched User in Component:", {
-      name: this.firstUserName,
-      surname: this.firstUserSurname,
-      email: this.firstUserEmail,
-      points: this.firstUserPoints,
-    });
-  },
+        // Fetch and assign badges
+        const fetchedBadges = await getBadges(fetchedUser.Id);
+        this.badges = fetchedBadges || []; // Assign badges or an empty array
+      },
       checkLoginStatus() {
         const token = localStorage.getItem("AccessToken");
         this.isLoggedIn = !!token;
@@ -114,12 +134,8 @@
     mounted() {
       this.checkLoginStatus();
     },
+
   };
   </script>
-  
-  <style scoped>
-  body {
-    font-family: "Plus Jakarta Sans", sans-serif;
-  }
-  </style>
+
   

@@ -9,5 +9,6 @@ export class User {
         this.LockoutEnd = data.LockoutEnd || data.lockoutEnd;
         this.LockoutEnabled = data.LockoutEnabled || data.lockoutEnabled;
         this.Points = data.Points || data.points;
+        this.Badges = data.badges || data.badges;
     }
 }
