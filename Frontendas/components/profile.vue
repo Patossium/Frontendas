@@ -7,7 +7,6 @@
               <h2 class="text-2xl font-bold sm:text-xl text-center">Public Profile</h2>
   
               <div class="grid max-w-2xl w-full mx-auto mt-8">
-                <!-- Profile Picture Section -->
                 <div class="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0 sm:justify-center">
                   <img
                     class="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300"
@@ -15,8 +14,7 @@
                     alt="Profile Picture"
                   />
                 </div>
-  
-                <!-- User Info -->
+
                 <div class="mt-8 text-[#202142] w-full">
                   <div class="mb-6">
                     <h3 class="text-lg font-semibold">Name:</h3>
@@ -97,7 +95,7 @@
         firstUserPoints: "",
         firstUserEmail: "",
         firstUserUserName: "",
-        badges: [], // Array to store all badge data
+        badges: [],
       };
     },
     methods: {
@@ -105,7 +103,6 @@
         const { getUser, getBadges } = logedInFunctions();
         const fetchedUser = await getUser();
 
-        // Assign user data
         this.firstId = fetchedUser.Id;
         this.firstUserName = fetchedUser.Name;
         this.firstUserSurname = fetchedUser.Surname;
@@ -113,9 +110,8 @@
         this.firstUserPoints = fetchedUser.Points;
         this.firstUserUserName = fetchedUser.Username;
 
-        // Fetch and assign badges
         const fetchedBadges = await getBadges(fetchedUser.Id);
-        this.badges = fetchedBadges || []; // Assign badges or an empty array
+        this.badges = fetchedBadges || [];
       },
       checkLoginStatus() {
         const token = localStorage.getItem("AccessToken");

@@ -32,10 +32,22 @@
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{ threat.user.userName }}</dd>
         </div>
 
-        <div v-if="threat.upvoted || threat.downvoted" class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt class="text-sm font-medium text-gray-900">Votes</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
-            Upvoted: {{ threat.upvoted }} | Downvoted: {{ threat.downvoted }}
+          <dd class="flex mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+            <button
+                class="focus:outline-none text-indigo-600 hover:text-indigo-800"
+                @click="upvoteThreatDetails(threat.id)"
+            >
+              <ArrowUpCircleIcon class="w-6 h-6" />
+            </button>
+            <span class="px-4 text-gray-900 font-medium">{{ threatVote?.score }}</span>
+            <button
+                class="focus:outline-none text-red-600 hover:text-red-800"
+                @click="downvoteThreatdetails(threat.id)"
+            >
+              <ArrowDownCircleIcon class="w-6 h-6" />
+            </button>
           </dd>
         </div>
       </dl>
@@ -89,6 +101,9 @@
                   <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     User
                   </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Vote
+                  </th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -117,6 +132,15 @@
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ event.User.userName }}
                   </td>
+                  <td class="flex whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <button class="focus:outline-none text-indigo-600 hover:text-indigo-800" @click="upvoteEventDetails(event.Id)">
+                      <ArrowUpCircleIcon class="w-6 h-6" />
+                    </button>
+                    <span class="px-4 text-gray-900 font-medium">{{  eventVote[event.Id]?.score}}</span>
+                    <button class="focus:outline-none text-red-600 hover:text-red-800" @click="downvoteEventDetails(event.Id)">
+                      <ArrowDownCircleIcon class="w-6 h-6" />
+                    </button>
+                  </td>
                 </tr>
                 </tbody>
               </table>
@@ -131,14 +155,17 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { logedInFunctions } from "~/composables/logedInFunctions";
+import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "@heroicons/vue/16/solid/index.js";
 
-const { getThreat, getEvents } = logedInFunctions();
+const { getThreat, getEvents, getVotesOnThreats, getVotesOnEvents, upvoteThreat, upvoteEvent, downvoteThreat, downvoteEvent } = logedInFunctions();
 
 const threat = ref(null);
 const events = ref([]);
+const threatVote = ref(null);
+let eventVote = reactive({});
 
 const route = useRoute();
 const threatId = route.params.id;
@@ -147,10 +174,69 @@ if (typeof window !== 'undefined') {
   localStorage.setItem("threatId", threatId);
 }
 
+const upvoteThreatDetails = async (threatId) => {
+  try {
+    const updatedVote = await upvoteThreat(threatId);
+    threatVote.value.score = updatedVote.score;
+  } catch (error) {
+    console.error('Error upvoting threat:', error);
+  }
+};
+
+const downvoteThreatdetails = async (threatId) => {
+  try {
+    const updatedVote = await downvoteThreat(threatId);
+    threatVote.value.score = updatedVote.score;
+  } catch (error) {
+    console.error('Error downvoting threat:', error);
+  }
+};
+
+const upvoteEventDetails = async (eventId) => {
+  try {
+    const updatedVote = await upvoteEvent(eventId);
+    eventVote[eventId] = updatedVote;
+
+    await getEventVoteDetails(eventId);
+  } catch (error) {
+    console.error('Error upvoting event:', error);
+  }
+};
+
+const downvoteEventDetails = async (eventId) => {
+  try {
+    const updatedVote = await downvoteEvent(eventId);
+    eventVote[eventId] = updatedVote;
+
+    await getEventVoteDetails(eventId);
+  } catch (error) {
+    console.error('Error downvoting event:', error);
+  }
+};
+
+
 const getThreatDetails = async () => {
   try {
     const responseThreat = await getThreat(threatId);
     threat.value = responseThreat;
+  } catch (error) {
+    console.error('Error fetching threat details:', error);
+  }
+};
+
+const getThreatVoteDetails = async () => {
+  try {
+    const voteThreat = await getVotesOnThreats(threatId);
+    threatVote.value = voteThreat;
+  } catch (error) {
+    console.error('Error fetching threat details:', error);
+  }
+};
+
+const getEventVoteDetails = async (eventId) => {
+  try {
+    const voteEvent = await getVotesOnEvents(eventId);
+    eventVote[eventId] = voteEvent;
   } catch (error) {
     console.error('Error fetching threat details:', error);
   }
@@ -162,15 +248,19 @@ const getEventDetails = async () => {
     console.log('API Response:', responseEvents);
     if (Array.isArray(responseEvents)) {
       events.value = responseEvents;
-      console.log(events);
+      // Fetch votes for each event
+      for (const event of responseEvents) {
+        await getEventVoteDetails(event.Id);
+      }
     } else if (responseEvents) {
-      // If response is not an array but exists, wrap it in an array
       events.value = [responseEvents];
+      // If single event, fetch its votes
+      await getEventVoteDetails(responseEvents.Id);
     } else {
       events.value = [];
     }
 
-    console.log('Processed events:', events.value); // Debug log
+    console.log('Processed events:', events.value);
   } catch (error) {
     console.error('Error fetching events:', error);
     events.value = [];
@@ -184,5 +274,6 @@ const redirectToCreateEvent = () => {
 onMounted(() => {
   getThreatDetails();
   getEventDetails();
+  getThreatVoteDetails();
 });
 </script>

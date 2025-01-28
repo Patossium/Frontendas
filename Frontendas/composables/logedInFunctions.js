@@ -204,7 +204,140 @@ export const logedInFunctions = () => {
             throw error;
         }
     };
+    const getVotesOnThreats = async (threatId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/threat/${threatId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+    const getVotesOnEvents = async (eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/event/${eventId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+    const upvoteThreat = async (threatId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/threat/${threatId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+    const upvoteEvent = async (eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/event/${eventId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+    const downvoteThreat = async (threatId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/threat/${threatId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+    const downvoteEvent = async (eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/event/${eventId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, upvoteThreat, upvoteEvent, downvoteThreat, downvoteEvent };
 
 }
