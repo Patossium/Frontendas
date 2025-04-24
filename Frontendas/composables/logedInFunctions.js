@@ -248,7 +248,7 @@ export const logedInFunctions = () => {
             throw error;
         }
     }
-    const upvoteThreat = async (threatId) => {
+    const voteThreat = async (threatId, upvote) => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/threat/${threatId}`, {
                 method: "POST",
@@ -256,6 +256,7 @@ export const logedInFunctions = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
                 },
+                body: JSON.stringify(upvote),
             });
 
             if (!response.ok) {
@@ -270,7 +271,7 @@ export const logedInFunctions = () => {
             throw error;
         }
     }
-    const upvoteEvent = async (eventId) => {
+    const voteEvent = async (eventId, upvote) => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/event/${eventId}`, {
                 method: "POST",
@@ -278,6 +279,7 @@ export const logedInFunctions = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
                 },
+                body: JSON.stringify(upvote),
             });
 
             if (!response.ok) {
@@ -338,6 +340,6 @@ export const logedInFunctions = () => {
     }
 
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, upvoteThreat, upvoteEvent, downvoteThreat, downvoteEvent };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent };
 
 }

@@ -160,7 +160,7 @@ import { useRoute } from 'vue-router';
 import { logedInFunctions } from "~/composables/logedInFunctions";
 import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "@heroicons/vue/16/solid/index.js";
 
-const { getThreat, getEvents, getVotesOnThreats, getVotesOnEvents, upvoteThreat, upvoteEvent, downvoteThreat, downvoteEvent } = logedInFunctions();
+const { getThreat, getEvents, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent } = logedInFunctions();
 
 const threat = ref(null);
 const events = ref([]);
@@ -176,7 +176,7 @@ if (typeof window !== 'undefined') {
 
 const upvoteThreatDetails = async (threatId) => {
   try {
-    const updatedVote = await upvoteThreat(threatId);
+    const updatedVote = await voteThreat(threatId, true);
     threatVote.value.score = updatedVote.score;
   } catch (error) {
     console.error('Error upvoting threat:', error);
@@ -185,7 +185,7 @@ const upvoteThreatDetails = async (threatId) => {
 
 const downvoteThreatdetails = async (threatId) => {
   try {
-    const updatedVote = await downvoteThreat(threatId);
+    const updatedVote = await voteThreat(threatId, false);
     threatVote.value.score = updatedVote.score;
   } catch (error) {
     console.error('Error downvoting threat:', error);
@@ -194,7 +194,7 @@ const downvoteThreatdetails = async (threatId) => {
 
 const upvoteEventDetails = async (eventId) => {
   try {
-    const updatedVote = await upvoteEvent(eventId);
+    const updatedVote = await voteEvent(eventId, true);
     eventVote[eventId] = updatedVote;
 
     await getEventVoteDetails(eventId);
@@ -205,7 +205,7 @@ const upvoteEventDetails = async (eventId) => {
 
 const downvoteEventDetails = async (eventId) => {
   try {
-    const updatedVote = await downvoteEvent(eventId);
+    const updatedVote = await voteEvent(eventId, false);
     eventVote[eventId] = updatedVote;
 
     await getEventVoteDetails(eventId);
