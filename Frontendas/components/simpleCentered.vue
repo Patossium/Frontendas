@@ -21,6 +21,9 @@
           <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-sm font-semibold leading-6 text-gray-900">
             {{ item.name }}
           </a>
+          <template v-if="isAdministrator">
+            <flyoutMenu/>
+          </template>
           <a href="#" @click="clearTokens" class="text-blue-600 hover:text-blue-500">Log out</a>
         </div>
         <div v-if="!isLoggedIn" class="lg:hidden">
@@ -97,6 +100,7 @@
 import { ref } from 'vue'
 import { Dialog, DialogPanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import flyoutMenu from '~/components/flyoutMenu.vue';
 
 
 // Define the clearTokens function
@@ -127,6 +131,25 @@ const checkLoginStatus = () => {
     isLoggedIn.value = token ? true : false;
   }
 }
+
+const isAdministrator = computed(() => {
+  const rolesString = localStorage.getItem('Roles');
+  if (!rolesString) return false;
+
+  try {
+    const roles = JSON.parse(rolesString);
+
+    // Handle both cases: when roles is an array or a single string
+    if (Array.isArray(roles)) {
+      return roles.includes('Administrator');
+    } else {
+      return roles === 'Administrator';
+    }
+  } catch (error) {
+    console.error('Error parsing roles:', error);
+    return false;
+  }
+});
 
 // Check login status when component is mounted
 checkLoginStatus();

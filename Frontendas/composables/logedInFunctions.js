@@ -248,6 +248,50 @@ export const logedInFunctions = () => {
             throw error;
         }
     }
+    const getNegativeThreats = async () => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/negativeThreats`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+    const getNegativeEvents = async () => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/negativeEvents`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
     const voteThreat = async (threatId, upvote) => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/threat/${threatId}`, {
@@ -340,6 +384,6 @@ export const logedInFunctions = () => {
     }
 
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents };
 
 }

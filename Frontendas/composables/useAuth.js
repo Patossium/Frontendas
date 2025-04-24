@@ -1,3 +1,4 @@
+import {jwtDecode} from "jwt-decode";
 
 export const useAuth = () => {
     const refreshTask = useState('refreshTask', () => null);
@@ -34,6 +35,12 @@ export const useAuth = () => {
             if (response.ok) {
                 const { accessToken: token } = await response.json();
                 localStorage.setItem('AccessToken', token);
+
+                const decoded = jwtDecode(token);
+                const roles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || [];
+
+                localStorage.setItem('Roles', JSON.stringify(roles));
+
                 return { status: response.status, message: 'Login successful.' };
             } else if (response.status === 422) {
                 return { status: response.status, message: 'Incorrect username or password.' };
