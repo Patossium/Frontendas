@@ -50,6 +50,9 @@
             </button>
           </dd>
         </div>
+        <div v-if="isAdministrator">
+        <button type="button" class="inline-flex justify-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click="deleteThreatDetails(threat.id)">Delete threat</button>
+        </div>
       </dl>
     </div>
 
@@ -107,7 +110,7 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="event in events" :key="event.Id" class="cursor-pointer hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300">
+                <tr v-for="event in events" :key="event.Id" class="cursor-pointer hover:bg-gray-100 active:bg-gray-200 transition-colors duration-300" @click="navigateToEventDetail(event.Id)">
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                     {{ event.Id }}
                   </td>
@@ -160,7 +163,7 @@ import { useRoute } from 'vue-router';
 import { logedInFunctions } from "~/composables/logedInFunctions";
 import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "@heroicons/vue/16/solid/index.js";
 
-const { getThreat, getEvents, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent } = logedInFunctions();
+const { getThreat, getEvents, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, deleteThreat } = logedInFunctions();
 
 const threat = ref(null);
 const events = ref([]);
@@ -168,7 +171,27 @@ const threatVote = ref(null);
 let eventVote = reactive({});
 
 const route = useRoute();
-const threatId = route.params.id;
+const router = useRouter();
+const threatId = route.params.threatId;
+
+const isAdministrator = computed(() => {
+  const rolesString = localStorage.getItem('Roles');
+  if (!rolesString) return false;
+
+  try {
+    const roles = JSON.parse(rolesString);
+
+    // Handle both cases: when roles is an array or a single string
+    if (Array.isArray(roles)) {
+      return roles.includes('Administrator');
+    } else {
+      return roles === 'Administrator';
+    }
+  } catch (error) {
+    console.error('Error parsing roles:', error);
+    return false;
+  }
+});
 
 if (typeof window !== 'undefined') {
   localStorage.setItem("threatId", threatId);
@@ -178,6 +201,19 @@ const upvoteThreatDetails = async (threatId) => {
   try {
     const updatedVote = await voteThreat(threatId, true);
     threatVote.value.score = updatedVote.score;
+  } catch (error) {
+    console.error('Error upvoting threat:', error);
+  }
+};
+
+const navigateToEventDetail = (eventId) => {
+  router.push(`/events/${eventId}`);
+};
+
+const deleteThreatDetails = async (threatId) => {
+  try {
+    await deleteThreat(threatId);
+    window.location.href = `http://localhost:3000/threatList`;
   } catch (error) {
     console.error('Error upvoting threat:', error);
   }

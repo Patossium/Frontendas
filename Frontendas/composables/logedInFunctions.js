@@ -150,6 +150,30 @@ export const logedInFunctions = () => {
         }
     }
 
+    const getEvent = async (threatId, eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/threats/${threatId}/events/${eventId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            //const events = data.map(item => new SecurityEvent(item));
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
     const postEvent = async (threatDetails) => {
       try {
           var threatId = parseInt(localStorage.getItem("threatId"), 10);
@@ -383,7 +407,51 @@ export const logedInFunctions = () => {
         }
     }
 
+    const deleteThreat = async (threatId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/threats/${threatId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to delete threat: ${response.status} ${errorText}`);
+            }
+
+            // Successfully deleted - don't try to parse response as JSON
+            return true;
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
+    const deleteEvent = async (threatId, eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/threats/${threatId}/events/${eventId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to delete event: ${response.status} ${errorText}`);
+            }
+
+            // Successfully deleted - don't try to parse response as JSON
+            return true;
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents, deleteThreat, getEvent, deleteEvent };
 
 }
