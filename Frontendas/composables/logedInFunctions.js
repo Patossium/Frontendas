@@ -451,7 +451,27 @@ export const logedInFunctions = () => {
         }
     }
 
+    const generateStix = async (threatId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/Stix/${threatId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to generate Stix: ${response.status} ${errorText}`);
+            }
+            return true;
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents, deleteThreat, getEvent, deleteEvent };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents, deleteThreat, getEvent, deleteEvent, generateStix };
 
 }

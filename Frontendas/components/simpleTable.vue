@@ -34,6 +34,9 @@
                   <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
                     User
                   </th>
+                  <th scope="col" class="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    STIX
+                  </th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
@@ -49,6 +52,14 @@
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ threat.User.userName }}
+                  </td>
+                  <td>
+                    <button
+                        class="py-1 px-2 mr-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        @click="generateStixDetails(threat.Id)"
+                    >
+                      Transform to STIX
+                    </button>
                   </td>
                 </tr>
                 </tbody>
@@ -72,6 +83,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { SecurityThreat } from "../models/SecurityThreat";
+import {logedInFunctions} from "~/composables/logedInFunctions.js";
+
+const { generateStix } = logedInFunctions();
 
 const threats = ref([]); // Holds the fetched threats
 const isLoggedIn = ref(false); // Track user login state
@@ -82,9 +96,6 @@ const checkLoginStatus = () => {
     isLoggedIn.value = token ? true : false;
   }
 };
-
-
-
 
 const getThreats = async () => {
   try {
@@ -105,6 +116,14 @@ const getThreats = async () => {
     console.log('Mapped threats:', threats.value);
   } catch (error) {
     console.error("Error fetching threats:", error);
+  }
+};
+
+const generateStixDetails = async (threatId) => {
+  try {
+    await generateStix(threatId);
+  } catch (error) {
+    console.error('Error transforming stix', error);
   }
 };
 
