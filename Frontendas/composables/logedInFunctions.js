@@ -451,25 +451,28 @@ export const logedInFunctions = () => {
         }
     }
 
-    const generateStix = async (threatId) => {
+    async function generateStix(threatId) {
         try {
-            const response = await fetch(`http://localhost:5079/api/Stix/${threatId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
-                },
+            const response = await fetch(`http://localhost:5079/api/stix/${threatId}`, {
+                method: 'POST',
             });
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to generate Stix: ${response.status} ${errorText}`);
-            }
-            return true;
+
+            if (!response.ok) throw new Error('Failed to generate STIX file');
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `stix-threat-${threatId}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
         } catch (error) {
-            console.error("Error during getting user data:", error);
-            throw error;
+            console.error('Error downloading STIX file:', error);
         }
     }
+
 
       // Return an object containing the function
       return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents, deleteThreat, getEvent, deleteEvent, generateStix };
