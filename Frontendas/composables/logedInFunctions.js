@@ -125,7 +125,7 @@ export const logedInFunctions = () => {
             console.error('Error during creating a threat', error);
             throw error;
         }
-    };
+      };
     const getEvents = async (threatId) => {
       try {
           const response = await fetch(`http://localhost:5079/api/threats/${threatId}/events/allEvents`, {
@@ -272,6 +272,29 @@ export const logedInFunctions = () => {
             throw error;
         }
     }
+
+    const getVotesOnComments = async (commentId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/comment/${commentId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
     const getNegativeThreats = async () => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/negativeThreats`, {
@@ -297,6 +320,29 @@ export const logedInFunctions = () => {
     const getNegativeEvents = async () => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/negativeEvents`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
+    const getNegativeComments = async () => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/negativeComments`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -362,6 +408,30 @@ export const logedInFunctions = () => {
             throw error;
         }
     }
+
+    const voteComment = async (commentId, upvote) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/comment/${commentId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+                body: JSON.stringify(upvote),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
     const downvoteThreat = async (threatId) => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/threat/${threatId}`, {
@@ -387,6 +457,29 @@ export const logedInFunctions = () => {
     const downvoteEvent = async (eventId) => {
         try {
             const response = await fetch(`http://localhost:5079/api/vote/event/${eventId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
+    const downvoteComment = async (commentId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/vote/comment/${commentId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -473,8 +566,59 @@ export const logedInFunctions = () => {
         }
     }
 
+    async function getComments(threatId, eventId){
+        try {
+            const response = await fetch(`http://localhost:5079/api/comments/threats/${threatId}/events/${eventId}/GetComments`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            return data
+        } catch (error) {
+            console.error("Error during getting user data:", error);
+            throw error;
+        }
+    }
+
+    const postComment = async (commentDetails, threatId, eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5079/api/comments/threats/${threatId}/events/${eventId}/createComment`,{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("AccessToken")}`,
+                },
+                body: JSON.stringify(commentDetails),
+            });
+
+            if (response.ok) {
+                return { status: response.status, message: 'Comment successfully created' };
+            } else {
+                // Try to parse the response as JSON, if possible
+                let errorDetails;
+                try {
+                    errorDetails = await response.json();
+                } catch (jsonError) {
+                    errorDetails = { message: 'Unknown error occurred' }; // Fallback if the response is not JSON
+                }
+                return { status: response.status, message: `Could not create a comment: ${errorDetails.message || 'Unknown error'}` };
+            }
+        } catch (error) {
+            console.error('Error during creating a comment', error);
+            throw error;
+        }
+    };
 
       // Return an object containing the function
-      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents, deleteThreat, getEvent, deleteEvent, generateStix };
+      return { getUser, getThreats, getThreat, postThreat, getEvents, postEvent, getLeaderboard, getBadges, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, downvoteThreat, downvoteEvent, getNegativeThreats, getNegativeEvents, deleteThreat, getEvent, deleteEvent, generateStix, getComments, postComment, getVotesOnComments, getNegativeComments, downvoteComment, voteComment };
 
 }

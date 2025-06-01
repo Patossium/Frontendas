@@ -158,10 +158,10 @@
 
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
-import { useRoute } from 'vue-router';
-import { logedInFunctions } from "~/composables/logedInFunctions";
-import { ArrowUpCircleIcon, ArrowDownCircleIcon } from "@heroicons/vue/16/solid/index.js";
+import {onMounted, reactive, ref} from 'vue';
+import {useRoute} from 'vue-router';
+import {logedInFunctions} from "~/composables/logedInFunctions";
+import {ArrowDownCircleIcon, ArrowUpCircleIcon} from "@heroicons/vue/16/solid/index.js";
 
 const { getThreat, getEvents, getVotesOnThreats, getVotesOnEvents, voteThreat, voteEvent, deleteThreat } = logedInFunctions();
 
